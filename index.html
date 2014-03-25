@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Stopwatch</title>
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.2.0.min.css">
+<script src="js/jquery-1.8.2.min.js"></script>
+<script src="js/jquery.mobile-1.2.0.min.js"></script>
+	<script>
+var	clsStopwatch = function() {
+		// Private vars
+		var	startAt	= 0;	// Time of last start / resume. (0 if not running)
+		var	lapTime	= 0;	// Time on the clock when last stopped in milliseconds
+ 
+		var	now	= function() {
+				return (new Date()).getTime(); 
+			}; 
+ 
+		// Public methods
+		// Start or resume
+		this.start = function() {
+				startAt	= startAt ? startAt : now();
+			};
+ 
+		// Stop or pause
+		this.stop = function() {
+				// If running, update elapsed time otherwise keep it
+				lapTime	= startAt ? lapTime + now() - startAt : lapTime;
+				startAt	= 0; // Paused
+			};
+ 
+		// Reset
+		this.reset = function() {
+				lapTime = startAt = 0;
+			};
+ 
+		// Duration
+		this.time = function() {
+				return lapTime + (startAt ? now() - startAt : 0); 
+			};
+	};
+ 
+var x = new clsStopwatch();
+var $time;
+var clocktimer;
+ 
+function pad(num, size) {
+	var s = "0000" + num;
+	return s.substr(s.length - size);
+}
+ 
+function formatTime(time) {
+	var h = m = s = ms = 0;
+	var newTime = '';
+ 
+	h = Math.floor( time / (60 * 60 * 1000) );
+	time = time % (60 * 60 * 1000);
+	m = Math.floor( time / (60 * 1000) );
+	time = time % (60 * 1000);
+	s = Math.floor( time / 1000 );
+	ms = time % 1000;
+ 
+	newTime = pad(h, 2) + ':' + pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 3);
+	return newTime;
+}
+ 
+function show() {
+	$time = document.getElementById('time');
+	update();
+}
+ 
+function update() {
+	$time.innerHTML = formatTime(x.time());
+}
+ 
+function start() {
+	clocktimer = setInterval("update()", 1);
+	x.start();
+	document.getElementById('this1').disabled=true;
+	var getthis=document.getElementById("this1").value;
+	document.getElementById("finals").innerHTML=getthis;
+	document.getElementById("this1").value="";
+	
+	
+}
+ 
+function stop() {
+	x.stop();
+	clearInterval(clocktimer);
+	var TL=document.getElementById("time").innerHTML;
+	document.getElementById("timeLap").innerHTML=TL;
+	}
+ 
+function reset() {
+	stop();
+	x.reset();
+	update();
+	window.location.reload()
+}
+	</script>
+
+	<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+	</head>
+<body onload="show();">
+<div data-role="page" data-theme="e" id="mainPage">
+	<div data-role="header" data-theme="a" >
+		<h1>STOP WATCH</h1>
+		<a href="#about" data-transition="flip" data-icon="gear" >ABOUT</a>
+	</div>
+	<div data-role="content">
+<center> <img src="icon.jpg" width="750" height="780" /> </center data>
+	
+
+	</div>
+	<div data-role="footer" data-position="fixed" data-theme="a">
+	<div data-role="navbar">
+	<ul>
+	<li><a href="#pageTwo" data-transition="flip" data-icon="grid" >MENU</a></li>
+
+	</ul>		
+	</div>
+	</div>
+</div>
+
+<!-- Start of Page 2 -->
+<div data-role="page" data-theme="e" id="pageTwo">
+	<div data-role="header">
+		<h1>STOP WATCH</h1>
+	</div>
+	<div data-role="content">
+<label>Event Name : </label><input type="text" id="this1" />
+	<div>Time: <span id="time"></span></div>
+	<input type="button" value="start" onclick="start();">
+	<input type="button" value="stop" onclick="stop();">
+	<input type="button" value="reset" onclick="reset()">
+	<br /><center>
+	<label id="finals"></label><span> : </span><label id="timeLap"></label>
+			</center>
+			</div>
+	<div data-role="footer" data-position="fixed">
+	<div data-role="navbar">
+	<ul>
+	<li><a href="#mainPage" data-icon="back" >Back</a></li>
+	</ul>		
+	</div>
+	</div>
+</div>
+
+<div data-role="page" data-theme="e" id="about">
+	<div data-role="header">
+		<h1>ABOUT</h1>
+	</div>
+	<div data-role="content">
+	<h1>Application Name : STOP WATCH</h1>
+	<h1>Description : An Application that may help you to beyond the limit's of your self, it measures how much you can do a thing. . </h1>
+	<h1>Developer Name : Mark Jowel Rebogio</h1>
+	<br />
+	<div class="fb-like" data-href="https://www.facebook.com/pages/Measure-Your-Limits/1433412510234885?skip_nax_wizard=true" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+	</div>
+	<div data-role="footer" data-position="fixed">
+	<div data-role="navbar">
+	<ul>
+	<li><a href="#mainPage" data-icon="back" >Back</a></li>
+	</ul>		
+	</div>
+	</div>
+</div>
+</div>
+</body>
+</html>
